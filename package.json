@@ -1,44 +1,81 @@
 {
-  "name": "tinydate",
-  "version": "1.3.0",
-  "repository": "lukeed/tinydate",
-  "description": "A tiny (349B) reusable date formatter. Extremely fast!",
-  "unpkg": "dist/tinydate.min.js",
-  "module": "dist/tinydate.mjs",
-  "main": "dist/tinydate.js",
-  "types": "index.d.ts",
-  "license": "MIT",
-  "author": {
-    "name": "Luke Edwards",
-    "email": "luke.edwards05@gmail.com",
-    "url": "https://lukeed.com"
-  },
-  "engines": {
-    "node": ">=4"
-  },
-  "scripts": {
-    "build": "bundt",
-    "bench": "node bench",
-    "prebench": "npm run build",
-    "pretest": "npm run build",
-    "test": "tape test/*.js | tap-spec"
-  },
-  "files": [
-    "dist",
-    "*.d.ts"
-  ],
-  "keywords": [
-    "date",
-    "datestamp",
-    "format",
-    "stamp",
-    "time",
-    "timestamp",
-    "time-stamp"
-  ],
-  "devDependencies": {
-    "bundt": "0.4.0",
-    "tap-spec": "5.0.0",
-    "tape": "4.11.0"
-  }
+	"name": "tiny_date_formatter",
+	"version": "1.0.0",
+	"description": "A tiny (349B) reusable date formatter. Extremely fast!",
+	"source": "src/dateFormat.ts",
+	"exports": "./dist/index.modern.js",
+	"main": "./dist/index.js",
+	"module": "./dist/index.module.js",
+	"unpkg": "./dist/index.umd.js",
+	"typings": "./dist/index.d.ts",
+	"sideEffects": false,
+	"files": [
+		"dist",
+		"src"
+	],
+	"author": {
+		"name": "Luke Edwards",
+		"email": "luke.edwards05@gmail.com",
+		"url": "https://lukeed.com"
+	},
+	"contributors": [
+		{
+			"name": "Brian Crotty",
+			"url": "https://github.com/illumincrotty"
+		}
+	],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/illumincrotty/tinydate.git"
+	},
+	"bugs": {
+		"url": "https://github.com/illumincrotty/tinydate/issues"
+	},
+	"homepage": "https://github.com/illumincrotty/tinydate#readme",
+	"keywords": [
+		"date",
+		"datestamp",
+		"format",
+		"stamp",
+		"time",
+		"timestamp",
+		"time-stamp"
+	],
+	"devDependencies": {
+		"@istanbuljs/nyc-config-typescript": "^1.0.1",
+		"@types/node": "^16.4.7",
+		"@typescript-eslint/eslint-plugin": "^4.28.5",
+		"@typescript-eslint/parser": "^4.28.5",
+		"ava": "^3.15.0",
+		"eslint": "^7.31.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-ava": "^12.0.0",
+		"eslint-plugin-prettier": "^3.4.0",
+		"eslint-plugin-promise": "^5.1.0",
+		"eslint-plugin-unicorn": "^34.0.1",
+		"microbundle": "^0.13.3",
+		"nyc": "^15.1.0",
+		"prettier": "^2.3.2",
+		"source-map-support": "^0.5.19",
+		"ts-node": "^10.1.0",
+		"typescript": "^4.3.5"
+	},
+	"scripts": {
+		"lint": "eslint src --ext .ts",
+		"lint:fix": "eslint src --fix --ext .ts",
+		"build": "pnpm test && microbundle",
+		"build-noTest": "microbundle",
+		"test": "ava test/**/*.spec.ts test/**/*.test.ts",
+		"coverage": "nyc pnpm test",
+		"report": "nyc report --reporter=lcov"
+	},
+	"ava": {
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		]
+	}
 }
