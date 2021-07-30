@@ -146,7 +146,7 @@ stamp(today);
 //=> 'Today is: July 4, 2019'
 ```
 
-Other example dictionaries: `{SP: ()=>"__spaces__"}`, `{'DD-3':(d:Date)=>d.getDate()-3.toString()`
+Other example dictionaries: `{SP: ()=>"__spaces__"}`, `{'DD-3':(d:Date)=>d.getDate()-3.toString()}`
 
 ### Patterns
 
@@ -173,5 +173,5 @@ If this tool isn't working for you, try one of these:
 
 - [date-fns]("https://github.com/date-fns/date-fns")
 - [@bitty/format-date]("https://github.com/VitorLuizC/format-date")
-- [fecha]("https://github.com/taylorhakes/fecha") 
+- [fecha]("https://github.com/taylorhakes/fecha")
   
