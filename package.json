@@ -1,7 +1,7 @@
 {
 	"name": "tiny_date_formatter",
 	"version": "2.0.0",
-	"description": "A tiny (349B) reusable date formatter. Extremely fast!",
+	"description": "A tiny (~350B) reusable date formatter. Extremely fast!",
 	"source": "src/dateFormat.ts",
 	"exports": "./dist/index.modern.js",
 	"main": "./dist/index.js",
