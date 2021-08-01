@@ -11,7 +11,7 @@
 
 ---
 
-<p align="center"> A tiny (358B) reusable date formatter. Extremely fast!
+<p align="center"> A tiny (~350B) reusable date formatter. Extremely fast!
 </p>
 
 ## 📝 Table of Contents
