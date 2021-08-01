@@ -1,21 +1,24 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import test from 'ava';
-import { formatter as source } from '../src/dateFormat';
+import { formatterFactory } from '../src/dateFormat';
 
 const reusableTestdate = new Date('5/1/2017, 4:30:09 PM');
+
+const f = formatterFactory('{YYYY}');
+f(new Date());
 
 const testFormatRunner = (
 	testFormat: string,
 	options?: { [key: string]: (d: Date) => string },
 	context?: Date
-): string => source(testFormat, options)(context ?? reusableTestdate);
+): string => formatterFactory(testFormat, options)(context ?? reusableTestdate);
 
 test('function is exported', (t) => {
-	t.is(typeof source, 'function', 'exports a function');
+	t.is(typeof formatterFactory, 'function', 'exports a function');
 });
 
 test('when called, it also returns a function', (t) => {
-	t.is(typeof source(''), 'function', 'returns a function');
+	t.is(typeof formatterFactory(''), 'function', 'returns a function');
 });
 
 test('does nothing if no match', (t) => {
@@ -55,10 +58,7 @@ test('default milliseconds', (t) => {
 	t.is(testFormatRunner('{fff}'), '000');
 });
 test('milliseconds non-zero', (t) => {
-	t.is(
-		testFormatRunner('{fff}', {}, new Date(1_559_607_289_771)),
-		'771'
-	);
+	t.is(testFormatRunner('{fff}', {}, new Date(1_559_607_289_771)), '771');
 });
 
 test('time formatted string', (t) => {
@@ -75,9 +75,7 @@ test('formatted date string', (t) => {
 
 test('all default options', (t) => {
 	t.is(
-		testFormatRunner(
-			'Created on: [{YY}   {YYYY}-{MM}-{DD} ~ {HH}:{mm}:{ss}.{fff}]'
-		),
+		testFormatRunner('Created on: [{YY}   {YYYY}-{MM}-{DD} ~ {HH}:{mm}:{ss}.{fff}]'),
 		'Created on: [17   2017-05-01 ~ 16:30:09.000]'
 	);
 });

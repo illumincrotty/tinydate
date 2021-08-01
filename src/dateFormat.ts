@@ -1,14 +1,20 @@
-type dateToPartialString = { (date: Date): string };
-type optionsForFormatter = {
-	[key: string]: dateToPartialString | (() => string) | undefined;
+/**
+ * Function that converts date objects to formatted strings
+ * @param {Date} date - the date you want to convert
+ * @returns {string} formatted date string
+ */
+type dateFormatter = { (date: Date): string };
+
+type optionsForFormatterFactory = {
+	[key: string]: dateFormatter | (() => string) | undefined;
 };
 
-/**
+/**Date formatter factory,
  * Creates a date formatter
  * @param format - a formatting string with replaceable text inside of brackets
  * @example "{MM}/{DD}/{YYYY}" "Created in {YYYY}" "last change at {HH}:{mm}"
  * @param options - An object where the keys are custom text to replace (can be anything besides brackets) and their values are the functions that should be called to replace that text (with a Date object as a parameter)
- * @returns a function that will format a date object
+ * @returns {dateFormatter} a function that will format a date object
  * @defaults Default text replacements are as follows:
  *
  * {fff} -> milliseconds
@@ -29,6 +35,7 @@ type optionsForFormatter = {
  * @examples
  * ```
  * import dateFormat from "date_format"
+import formatter from './index';
  *
  * const simpleFormat = dateFormat("{MM}{DD}{YYYY} {HH}:{mm}")
  *
@@ -52,10 +59,13 @@ type optionsForFormatter = {
  * //output: The week from 2/12-2/19
  * ```
  */
-const formatter = (format: string, options: optionsForFormatter = {}) => {
+const formatterFactory = (
+	format: string,
+	options: optionsForFormatterFactory = {}
+): dateFormatter => {
 	const _lastTwoDigits = -2;
 	const _offByOne = 1;
-	const _defaultFormatOptions: Map<string, dateToPartialString> = new Map([
+	const _defaultFormatOptions: Map<string, dateFormatter> = new Map([
 		['fff', (d: Date) => d.getMilliseconds().toString().padStart(3, '0')],
 		['ss', (d: Date) => d.getSeconds().toString().padStart(2, '0')],
 		['mm', (d: Date) => d.getMinutes().toString().padStart(2, '0')],
@@ -85,11 +95,6 @@ const formatter = (format: string, options: optionsForFormatter = {}) => {
 		throw new TypeError(`Undefined key in format: ${trimmed}`);
 	});
 
-	/**
-	 * Function that converts date objects to formatted strings
-	 * @param {Date} date - the date you want to convert
-	 * @returns {string} formatted date string
-	 */
 	return (date: Date): string => {
 		return _mapped
 			.map((_element) => {
@@ -100,4 +105,4 @@ const formatter = (format: string, options: optionsForFormatter = {}) => {
 	};
 };
 
-export { formatter, dateToPartialString, optionsForFormatter };
+export { formatterFactory, dateFormatter, optionsForFormatterFactory };

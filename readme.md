@@ -26,7 +26,7 @@
   - [🎈 Usage](#-usage)
     - [Example](#example)
     - [API](#api)
-      - [formatter(pattern, dict?)(date?)](#formatterpattern-dictdate)
+      - [formatterFactory(pattern, dict?)(date?)](#formatterfactorypattern-dictdate)
         - [pattern](#pattern)
         - [dict](#dict)
     - [Patterns](#patterns)
@@ -94,10 +94,10 @@ That means that wherever and however you use this package — in browser or node
 ### Example
 
 ```js
-import {formatter} from ('tiny_date_formatter');
+import { formatterFactory } from ('tiny_date_formatter');
 const exampleDate = new Date('5/1/2017, 4:30:09 PM');
 
-const stamp = formatter('Current time: [{HH}:{mm}:{ss}]');
+const stamp = formatterFactory('Current time: [{HH}:{mm}:{ss}]');
 
 stamp(fooDate);
 //=> Current time: [16:30:09]
@@ -108,9 +108,9 @@ stamp(new Date());
 
 ### API
 
-#### formatter(pattern, dict?)(date?)
+#### formatterFactory(pattern, dict?)(date?)
 
-Returns: `Function`
+Returns: `Function(Date)=>string`
 
 Returns a rendering function that accepts a [`date`](#date) value as its only argument.
 
@@ -142,7 +142,7 @@ const stamp = tinydate('Today is: {MMMM} {DD}, {YYYY}', {
  DD: d => d.getDate()
 });
 
-stamp(today);
+stamp(new Date());
 //=> 'Today is: July 4, 2019'
 ```
 
