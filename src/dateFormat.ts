@@ -1,4 +1,8 @@
 type dateFormatter = { (date: Date): string };
+interface formatOptions {
+	[key: string]: dateFormatter | (() => string);
+}
+
 const _defaultFormatOptions: Map<string, dateFormatter> = new Map([
 	['fff', (d: Date) => d.getMilliseconds().toString().padStart(3, '0')],
 	['ss', (d: Date) => d.getSeconds().toString().padStart(2, '0')],
@@ -62,7 +66,7 @@ import formatter from './index';
  */
 const _formatterFactory = (
 	format: string,
-	options: { [key: string]: dateFormatter | (() => string) | undefined } = {}
+	options: formatOptions = {}
 ): dateFormatter => {
 	const _optionsMap = new Map(Object.entries(options));
 
@@ -88,4 +92,4 @@ const _formatterFactory = (
 	};
 };
 
-export { _formatterFactory as formatterFactory, dateFormatter };
+export { _formatterFactory as formatterFactory, dateFormatter, formatOptions };
