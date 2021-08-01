@@ -4,9 +4,6 @@ import { formatterFactory } from '../src/dateFormat';
 
 const reusableTestdate = new Date('5/1/2017, 4:30:09 PM');
 
-const f = formatterFactory('{YYYY}');
-f(new Date());
-
 const testFormatRunner = (
 	testFormat: string,
 	options?: { [key: string]: (d: Date) => string },
