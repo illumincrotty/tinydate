@@ -1,16 +1,17 @@
-/**
- * Function that converts date objects to formatted strings
- * @param {Date} date - the date you want to convert
- * @returns {string} formatted date string
- */
 type dateFormatter = { (date: Date): string };
+const _defaultFormatOptions: Map<string, dateFormatter> = new Map([
+	['fff', (d: Date) => d.getMilliseconds().toString().padStart(3, '0')],
+	['ss', (d: Date) => d.getSeconds().toString().padStart(2, '0')],
+	['mm', (d: Date) => d.getMinutes().toString().padStart(2, '0')],
+	['HH', (d: Date) => d.getHours().toString().padStart(2, '0')],
+	['DD', (d: Date) => d.getDate().toString().padStart(2, '0')],
+	['MM', (d: Date) => (d.getMonth() + 1).toString().padStart(2, '0')],
+	['YY', (d: Date) => d.getFullYear().toString().slice(-2).padStart(2, '0')],
+	['YYYY', (d: Date) => d.getFullYear().toString().padStart(4, '0')],
+]);
 
-type optionsForFormatterFactory = {
-	[key: string]: dateFormatter | (() => string) | undefined;
-};
-
-/**Date formatter factory,
- * Creates a date formatter
+/**
+ * Date formatter factory, creates a date formatter
  * @param format - a formatting string with replaceable text inside of brackets
  * @example "{MM}/{DD}/{YYYY}" "Created in {YYYY}" "last change at {HH}:{mm}"
  * @param options - An object where the keys are custom text to replace (can be anything besides brackets) and their values are the functions that should be called to replace that text (with a Date object as a parameter)
@@ -59,41 +60,23 @@ import formatter from './index';
  * //output: The week from 2/12-2/19
  * ```
  */
-const formatterFactory = (
+const _formatterFactory = (
 	format: string,
-	options: optionsForFormatterFactory = {}
+	options: { [key: string]: dateFormatter | (() => string) | undefined } = {}
 ): dateFormatter => {
-	const _lastTwoDigits = -2;
-	const _offByOne = 1;
-	const _defaultFormatOptions: Map<string, dateFormatter> = new Map([
-		['fff', (d: Date) => d.getMilliseconds().toString().padStart(3, '0')],
-		['ss', (d: Date) => d.getSeconds().toString().padStart(2, '0')],
-		['mm', (d: Date) => d.getMinutes().toString().padStart(2, '0')],
-		['HH', (d: Date) => d.getHours().toString().padStart(2, '0')],
-		['DD', (d: Date) => d.getDate().toString().padStart(2, '0')],
-		['MM', (d: Date) => (d.getMonth() + _offByOne).toString().padStart(2, '0')],
-		[
-			'YY',
-			(d: Date) =>
-				d.getFullYear().toString().slice(_lastTwoDigits).padStart(2, '0'),
-		],
-		['YYYY', (d: Date) => d.getFullYear().toString().padStart(4, '0')],
-	]);
-
 	const _optionsMap = new Map(Object.entries(options));
 
-	const _split = format
-		.replaceAll('{', ' {')
-		.replaceAll('}', '} ')
-		.split(/\W(?=\{)|(?<=\})\W/);
-
-	const _mapped = _split.map((value) => {
-		if (!(value.includes('{') && value.includes('}'))) return value;
-		const trimmed = value.slice(1, -1);
-		if (_optionsMap.has(trimmed)) return _optionsMap.get(trimmed);
-		if (_defaultFormatOptions.has(trimmed)) return _defaultFormatOptions.get(trimmed);
-		throw new TypeError(`Undefined key in format: ${trimmed}`);
-	});
+	const _mapped = format
+		.replaceAll('{', ' {') //add extra space in front of open brace
+		.split(/\W(?=\{)|\}/) //split on the (just inserted) space before an open brace or a close brace (to keep the open brace for the next step)
+		.map((value) => {
+			if (!(value.charAt(0) === '{')) return value;
+			const _trimmed = value.slice(1);
+			if (_optionsMap.has(_trimmed)) return _optionsMap.get(_trimmed);
+			if (_defaultFormatOptions.has(_trimmed))
+				return _defaultFormatOptions.get(_trimmed);
+			throw new TypeError(`Undefined key in format: ${_trimmed}`);
+		});
 
 	return (date: Date): string => {
 		return _mapped
@@ -105,4 +88,4 @@ const formatterFactory = (
 	};
 };
 
-export { formatterFactory, dateFormatter, optionsForFormatterFactory };
+export { _formatterFactory as formatterFactory, dateFormatter };
